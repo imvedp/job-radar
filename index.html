@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ved's Job Radar</title>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F2F4F7;--sheet:#FFFFFF;--ink:#13294B;--mute:#5B6B82;--line:#DCE2EA;--govt:#D9822B;--remote:#1F7A6E;--mnc:#6B4E9B;--ok:#2E7D32;--no:#B23A3A;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#0F1A2B;--sheet:#16243A;--ink:#E6ECF5;--mute:#9AA9BF;--line:#26374F;--govt:#F0A050;--remote:#4DB6A6;--mnc:#A78BDB;--ok:#6CC070;--no:#E07070;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Atkinson Hyperlegible",system-ui,sans-serif}
+header{padding:28px 20px 8px;max-width:980px;margin:auto}
+h1{font-size:2.2rem;line-height:1.1;margin:0 0 4px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin:0}
+nav{position:sticky;top:0;background:var(--bg);z-index:2;border-bottom:1px solid var(--line)}
+nav div{max-width:980px;margin:auto;display:flex;gap:4px;overflow-x:auto;padding:0 12px}
+nav button{background:none;border:0;color:var(--mute);font:inherit;padding:12px 10px;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+nav button[aria-selected=true]{color:var(--ink);border-color:var(--ink);font-weight:700}
+main{max-width:980px;margin:auto;padding:16px 20px 60px}
+section{display:none}section.on{display:block}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+input,select{font:inherit;color:var(--ink);background:var(--sheet);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
+input{flex:1;min-width:200px}
+.job{display:block;background:var(--sheet);border-left:5px solid var(--c);padding:12px 14px;margin-bottom:8px;border-radius:0 8px 8px 0;color:inherit;text-decoration:none}
+.job:hover,.job:focus-visible{outline:2px solid var(--c)}
+.job b{display:block}.meta{color:var(--mute);font-size:.88rem}
+.new{background:var(--c);color:var(--sheet);font-size:.75rem;padding:1px 6px;border-radius:4px;margin-left:6px}
+.chip{display:inline-block;border:1px solid var(--line);border-radius:12px;padding:0 8px;font-size:.8rem;margin:4px 4px 0 0}
+table{width:100%;border-collapse:collapse;background:var(--sheet);border-radius:8px;overflow:hidden}
+td,th{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:.9rem;color:var(--mute)}
+.ok{color:var(--ok);font-weight:700}.no{color:var(--no);font-weight:700}.maybe{color:var(--govt);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.grid h3{margin:0 0 6px;font-size:1.05rem}.grid a{color:var(--ink)}
+ul{padding-left:18px;margin:0}li{margin:4px 0}
+.note{color:var(--mute);font-size:.9rem;margin-top:12px}
+label.ck{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Ved's Job Radar</h1>
+  <p class="sub" id="sub">Loading…</p>
+</header>
+<nav><div role="tablist">
+  <button role="tab" data-t="jobs" aria-selected="true">Jobs</button>
+  <button role="tab" data-t="elig">Govt eligibility</button>
+  <button role="tab" data-t="portals">Portals & consultancies</button>
+  <button role="tab" data-t="skills">Upskill</button>
+  <button role="tab" data-t="prep">Interview prep</button>
+</div></nav>
+<main>
+
+<section id="jobs" class="on">
+  <div class="bar">
+    <input id="q" type="search" placeholder="Search: AI, DevOps, manager, SBI, teacher…" aria-label="Search jobs">
+    <select id="cat" aria-label="Category"><option value="">All</option><option value="govt">Government / bank / PSU</option><option value="remote">Remote</option><option value="mnc">MNC hiring news</option></select>
+    <select id="days" aria-label="Posted within"><option value="2">Last 2 days</option><option value="7" selected>Last 7 days</option><option value="30">Last 30 days</option></select>
+  </div>
+  <div id="list"></div>
+</section>
+
+<section id="elig">
+  <table>
+    <thead><tr><th>Route</th><th>Typical age cap (GEN)</th><th>You</th></tr></thead>
+    <tbody id="eligRows"></tbody>
+  </table>
+  <p class="note">Caps vary per notification. Always confirm on the official PDF before applying.</p>
+</section>
+
+<section id="portals"><div class="grid">
+  <div><h3>Job portals (saved searches)</h3><ul>
+    <li><a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords=Engineering%20Manager%20React&location=India&f_TPR=r86400">LinkedIn: EM / React, last 24h</a></li>
+    <li><a target="_blank" href="https://www.linkedin.com/jobs/search/?keywords=React%20Native&f_WT=2&f_TPR=r86400">LinkedIn: React Native remote</a></li>
+    <li><a target="_blank" href="https://www.naukri.com/react-native-jobs">Naukri: React Native</a></li>
+    <li><a target="_blank" href="https://www.naukri.com/engineering-manager-jobs">Naukri: Engineering Manager</a></li>
+    <li><a target="_blank" href="https://www.hirist.tech">Hirist (tech only)</a></li>
+    <li><a target="_blank" href="https://www.instahyre.com">Instahyre</a></li>
+    <li><a target="_blank" href="https://cutshort.io">Cutshort</a></li>
+    <li><a target="_blank" href="https://wellfound.com/jobs">Wellfound (startups)</a></li>
+  </ul></div>
+  <div><h3>Consultancies</h3><ul>
+    <li><a target="_blank" href="https://www.teamlease.com">TeamLease</a></li>
+    <li><a target="_blank" href="https://www.randstad.in">Randstad India</a></li>
+    <li><a target="_blank" href="https://www.manpowergroup.co.in">ManpowerGroup</a></li>
+    <li><a target="_blank" href="https://www.adecco.co.in">Adecco</a></li>
+    <li><a target="_blank" href="https://www.abcconsultants.in">ABC Consultants</a></li>
+    <li><a target="_blank" href="https://www.michaelpage.co.in">Michael Page</a></li>
+    <li><a target="_blank" href="https://www.quesscorp.com">Quess</a></li>
+  </ul></div>
+  <div><h3>Remote & freelance</h3><ul>
+    <li><a target="_blank" href="https://www.upwork.com">Upwork</a></li>
+    <li><a target="_blank" href="https://www.toptal.com">Toptal (high pay, tough screen)</a></li>
+    <li><a target="_blank" href="https://arc.dev">Arc.dev</a></li>
+    <li><a target="_blank" href="https://www.turing.com">Turing</a></li>
+    <li><a target="_blank" href="https://contra.com">Contra</a></li>
+    <li><a target="_blank" href="https://remotive.com">Remotive</a></li>
+  </ul></div>
+  <div><h3>Official govt sources</h3><ul>
+    <li><a target="_blank" href="https://www.ncs.gov.in">National Career Service</a></li>
+    <li><a target="_blank" href="https://www.employmentnews.gov.in">Employment News</a></li>
+    <li><a target="_blank" href="https://upsc.gov.in">UPSC</a></li>
+    <li><a target="_blank" href="https://sbi.co.in/web/careers">SBI Careers</a></li>
+    <li><a target="_blank" href="https://www.ibps.in">IBPS</a></li>
+    <li><a target="_blank" href="https://bpsc.bihar.gov.in">BPSC</a></li>
+    <li><a target="_blank" href="https://kvsangathan.nic.in">KVS</a></li>
+    <li><a target="_blank" href="https://www.cdac.in">C-DAC</a></li>
+    <li><a target="_blank" href="https://www.nielit.gov.in">NIELIT</a></li>
+  </ul></div>
+</div></section>
+
+<section id="skills"><div class="grid">
+  <div><h3>1 · AI app engineering (highest ROI for you)</h3><ul>
+    <li>LLM APIs, prompt design, structured outputs</li><li>RAG: embeddings, vector DBs, chunking</li>
+    <li>Agents, tool use, MCP servers (Node/TS)</li><li>Evals & guardrails, cost/latency tuning</li>
+    <li><a target="_blank" href="https://docs.anthropic.com">Anthropic docs</a> · <a target="_blank" href="https://www.deeplearning.ai/short-courses/">DeepLearning.AI short courses</a></li>
+  </ul></div>
+  <div><h3>2 · Cloud</h3><ul>
+    <li>Azure Developer (AZ-204), then AI Engineer (AI-102)</li><li>Or AWS Solutions Architect Associate</li>
+    <li><a target="_blank" href="https://learn.microsoft.com/training">Microsoft Learn (free)</a></li>
+  </ul></div>
+  <div><h3>3 · DevOps basics</h3><ul>
+    <li>Docker, GitHub Actions CI/CD, Kubernetes basics</li><li>Observability (you already know App Insights)</li>
+    <li><a target="_blank" href="https://roadmap.sh/devops">roadmap.sh/devops</a></li>
+  </ul></div>
+  <div><h3>4 · Manager track</h3><ul>
+    <li>System design for frontend & mobile</li><li>Delivery: estimation, hiring, 1:1s, OKRs</li>
+    <li>Read: <i>The Manager's Path</i>, <i>An Elegant Puzzle</i></li><li>PMP or CSM if targeting delivery-manager roles</li>
+  </ul></div>
+  <div><h3>Roles to target in 2026</h3><ul>
+    <li>AI Engineer / GenAI Frontend Engineer</li><li>Engineering Manager — Mobile/Web</li>
+    <li>Solution Architect (Frontend + AI)</li><li>Technical Program/Delivery Manager (MBA helps)</li>
+    <li>FinTech product engineering (MBA Finance helps)</li>
+  </ul></div>
+</div></section>
+
+<section id="prep">
+  <div id="checks"></div>
+  <p class="note">Progress saves in this browser.</p>
+</section>
+</main>
+
+<script>
+const DOB = new Date('1994-01-05');
+const age = (d=new Date()) => { let a=d.getFullYear()-DOB.getFullYear(); if(d<new Date(d.getFullYear(),DOB.getMonth(),DOB.getDate())) a--; return a; };
+const A = age();
+
+// Typical caps — verify every notification
+const ELIG = [
+  ['UPSC lateral entry (JS / Director / Dy Secy)', 'Experience-based, ~32–55 by level', 'maybe', 'Scheme paused since Aug 2024 — watch for revival'],
+  ['SBI SO — Dy Manager / Manager (IT)', 'Often 32–42 for experienced posts', 'maybe'],
+  ['IBPS SO — IT Officer', '30', 'no'],
+  ['RBI Grade B / NIC Scientist B', '30', 'no'],
+  ['BPSC TRE (Bihar teacher, you have STET)', 'Male GEN up to 37', 'ok'],
+  ['KVS / NVS PGT Computer Science', 'Up to 40', 'ok', 'Usually needs B.Ed — check'],
+  ['C-DAC / NIELIT / NeGD / Digital India Corp (contract)', 'Often 35–50', 'ok'],
+  ['PSU experienced hires (BEL, BHEL, PowerGrid — Manager IT)', 'Often 35–45', 'ok'],
+  ['State e-Gov (e.g. BELTRON) consultants', 'Often 40+', 'ok'],
+];
+document.getElementById('eligRows').innerHTML = ELIG.map(([r,c,s,n])=>
+  `<tr><td>${r}${n?`<div class="meta">${n}</div>`:''}</td><td>${c}</td><td class="${s}">${{ok:'Eligible',no:'Over age',maybe:'Check'}[s]}</td></tr>`).join('');
+
+// Tabs
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===b.dataset.t));
+});
+
+// Jobs
+const COLOR={govt:'var(--govt)',remote:'var(--remote)',mnc:'var(--mnc)'};
+let JOBS=[];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function render(){
+  const q=document.getElementById('q').value.toLowerCase().trim(), cat=document.getElementById('cat').value;
+  const cut=Date.now()-document.getElementById('days').value*864e5, dayAgo=Date.now()-864e5;
+  const rows=JOBS.filter(j=>(!cat||j.category===cat)&&new Date(j.date)>cut&&(!q||(j.title+' '+(j.tags||[]).join(' ')+' '+(j.query||'')).toLowerCase().includes(q)));
+  document.getElementById('list').innerHTML = rows.length ? rows.map(j=>`
+    <a class="job" style="--c:${COLOR[j.category]}" href="${esc(j.link)}" target="_blank" rel="noopener">
+      <b>${esc(j.title)}${new Date(j.firstSeen)>dayAgo?'<span class="new">New</span>':''}</b>
+      <span class="meta">${esc(j.source)} · ${new Date(j.date).toLocaleDateString('en-IN')}</span>
+      ${(j.match||[]).length?'<div>'+j.match.map(m=>`<span class="chip">${esc(m)}</span>`).join('')+'</div>':''}
+    </a>`).join('') : '<p>No jobs match. Widen the date range or clear the search.</p>';
+}
+['q','cat','days'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+fetch('data/jobs.json?'+Date.now()).then(r=>r.json()).then(d=>{
+  JOBS=d.jobs||[];
+  document.getElementById('sub').textContent = `Age ${A} · General · ${JOBS.length} openings · updated ${d.updated?new Date(d.updated).toLocaleString('en-IN'):'never — run the workflow once'}`;
+  render();
+}).catch(()=>document.getElementById('sub').textContent='Could not load data/jobs.json. Run the GitHub Action once.');
+
+// Interview prep checklist
+const PREP=['JS deep dive: event loop, closures, promises, memory leaks','React: rendering, hooks pitfalls, performance, RSC','React Native: bridge vs new architecture, native modules, perf','Mobile security: SSL pinning, root/jailbreak detection, secure storage','Frontend system design: design a dashboard / feed / offline-first app','DSA: arrays, maps, two pointers, BFS/DFS — 2 problems a day','Build & demo one AI project (RAG or agent) on GitHub','Behavioural: 6 STAR stories (conflict, failure, leading, delivery)','Manager round: hiring, underperformer, estimation, stakeholder push-back','Salary negotiation: know your number and market band','Update LinkedIn headline + resume with AI + leadership impact'];
+let done={}; try{done=JSON.parse(localStorage.getItem('prep')||'{}')}catch(e){}
+document.getElementById('checks').innerHTML=PREP.map((p,i)=>`<label class="ck"><input type="checkbox" data-i="${i}" ${done[i]?'checked':''}> ${p}</label>`).join('');
+document.getElementById('checks').addEventListener('change',e=>{done[e.target.dataset.i]=e.target.checked;try{localStorage.setItem('prep',JSON.stringify(done))}catch(_){}});
+</script>
+</body>
+</html>
